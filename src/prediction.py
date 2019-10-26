@@ -12,7 +12,7 @@ def predict(image_batch):
 
     # convert the probabilities to class labels
     # We will get top 5 predictions which is the default
-    label = decode_predictions(predictions, top=10)[0][0]
+    label = decode_predictions(predictions, top=10)[0]
 
     print(f"predicted labels - {label}")
 
