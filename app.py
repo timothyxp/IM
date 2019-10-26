@@ -4,6 +4,7 @@ import os
 from src.preprocessing import image_proprocessing
 from src.prediction import predict
 import json
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -23,7 +24,21 @@ def get_image():
 
         labels = predict(image_batch)
 
-        return json.dumps(labels)
+        data = pd.read_csv("imagenet.csv")
+
+        result = []
+
+        for label in labels:
+            res = {"class_name": label[0], "tag": label[1], "probability": label[2]}
+            row = data[data.class_id == label[0]].loc[0]
+            res["artist"] = row.artist
+            res["song_name"] = row.music_name
+            res["music_img"] = row.music_img
+            res["youtube_url"] = row.youtube_link
+
+            result.append(res)
+
+        return json.dumps(result)
 
     except Exception as ex:
         print("pizdec nahui")
